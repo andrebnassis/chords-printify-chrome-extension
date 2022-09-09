@@ -1,3 +1,9 @@
+
+## References
+ - https://developer.chrome.com/docs/extensions/mv3/messaging/
+ - https://www.youtube.com/watch?v=0n809nd4Zu4&t=182s&ab_channel=freeCodeCamp.org
+ - https://github.com/SimGus/chrome-extension-v3-starter
+
 <div align="center">
     <img src="https://raw.githubusercontent.com/SimGus/chrome-addon-v3-starter/master/logo/logo-128.png"/>
     <h1>Chrome Extension v3 Starter</h1>
