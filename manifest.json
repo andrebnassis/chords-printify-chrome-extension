@@ -16,13 +16,13 @@
     },
     "permissions": ["tabs", "activeTab", "scripting"],
     "host_permissions": [
-        "*://*/*"
+        "https://www.cifraclub.com.br/*"
     ],
     "background": {
         "service_worker": "service-worker.js"
     },
     "content_scripts": [{
         "js": ["foreground.js"],
-        "matches": ["https://github.com/*"]
+        "matches": ["https://www.cifraclub.com.br/*/imprimir.html"]
     }]
 }
