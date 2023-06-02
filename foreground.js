@@ -6,118 +6,6 @@
 
 console.log("This prints to the console of the page (injected only if the page url matched)")
 
-chrome.runtime.onMessage.addListener((obj, sender, response) => {
-
-    const {type, data} = obj;
-    console.log(type);
-    console.log(data);
-
-
-
-const logo = document.querySelector('img.logo');
-const compositor = document.querySelector('small.compositor');
-const cifraclubSideMenu = document.querySelector('#side-menu');
-let extensionSideMenu = document.querySelector('div[data-id="cifra-extension"]')
-
-if(extensionSideMenu){
-    return;
-}
-/* Create Side Menu Section */
-
-extensionSideMenu = document.createElement('div');
-extensionSideMenu.setAttribute('id', 'side-menu');
-extensionSideMenu.dataset.id='cifra-extension';
-extensionSideMenu.classList.add('g-side');
-extensionSideMenu.style.marginTop = '370px'
-extensionSideMenu.style.height = '300px'
-extensionSideMenu.style.width = '150px'
-extensionSideMenu.style.overflow = 'auto'
-
-const extensionSideMenuMainTitle = document.createElement('strong');
-extensionSideMenuMainTitle.appendChild(document.createTextNode('Cifra Extension'));
-
-const extensionSideMenuList = document.createElement('ul');
-
-const extensionSideMenuListHeaderSection = document.createElement('li');
-const extensionSideMenuListHeaderSectionTitle = document.createElement('small');
-extensionSideMenuListHeaderSectionTitle.appendChild(document.createTextNode('Header'));
-extensionSideMenuListHeaderSection.appendChild(extensionSideMenuListHeaderSectionTitle);
-extensionSideMenuListHeaderSection.appendChild(document.createElement('hr'));
-
-const logoButtonExtContainer = document.createElement('span');
-logoButtonExtContainer.classList.add('inp_opt','small');
-const logo_button_ext = document.createElement('input');
-logo_button_ext.setAttribute('type', 'checkbox');
-logo_button_ext.setAttribute('id', 'exib_logo');
-logo_button_ext.setAttribute('checked', logo.checked);
-const logo_button_ext_label = document.createElement('label');
-logo_button_ext_label.setAttribute('for','exib_logo');
-logo_button_ext_label.appendChild(document.createTextNode('Show logo'));
-
-logoButtonExtContainer.appendChild(logo_button_ext);
-logoButtonExtContainer.appendChild(logo_button_ext_label);
-
-
-const optimizeTitleButtonExtContainer = document.createElement('span');
-optimizeTitleButtonExtContainer.classList.add('inp_opt','small');
-const optimize_title_button_ext = document.createElement('input');
-optimize_title_button_ext.setAttribute('type', 'checkbox');
-optimize_title_button_ext.setAttribute('id', 'optimize_title');
-const optimize_title_button_ext_label = document.createElement('label');
-optimize_title_button_ext_label.setAttribute('for','optimize_title');
-optimize_title_button_ext_label.appendChild(document.createTextNode('Optimize Title'));
-
-optimizeTitleButtonExtContainer.appendChild(optimize_title_button_ext);
-optimizeTitleButtonExtContainer.appendChild(optimize_title_button_ext_label);
-
-const compositorButtonExtContainer = document.createElement('span');
-compositorButtonExtContainer.classList.add('inp_opt','small');
-const compositor_button_ext = document.createElement('input');
-compositor_button_ext.setAttribute('type', 'checkbox');
-compositor_button_ext.setAttribute('id', '#exib_compositor');
-compositor_button_ext.setAttribute('checked', compositor.checked);
-const compositor_button_ext_label = document.createElement('label');
-compositor_button_ext_label.setAttribute('for','#exib_compositor');
-compositor_button_ext_label.appendChild(document.createTextNode('Show Compositor'));
-
-compositorButtonExtContainer.appendChild(compositor_button_ext);
-compositorButtonExtContainer.appendChild(compositor_button_ext_label);
-
-
-extensionSideMenuListHeaderSection.appendChild(logoButtonExtContainer);
-extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
-extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
-extensionSideMenuListHeaderSection.appendChild(optimizeTitleButtonExtContainer);
-extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
-extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
-extensionSideMenuListHeaderSection.appendChild(compositorButtonExtContainer);
-
-
-const extensionSideMenuChordsSection = document.createElement('li');
-const extensionSideMenuListChordsSectionTitle = document.createElement('small');
-extensionSideMenuListChordsSectionTitle.appendChild(document.createTextNode('Chords'));
-const extensionSideMenuChordsList = document.createElement('ul');
-extensionSideMenuChordsList.setAttribute('id','chords');
-
-extensionSideMenuChordsSection.appendChild(extensionSideMenuListChordsSectionTitle);
-extensionSideMenuChordsSection.appendChild(document.createElement('hr'));
-extensionSideMenuChordsSection.appendChild(extensionSideMenuChordsList);
-
-
-
-extensionSideMenuList.appendChild(extensionSideMenuListHeaderSection);
-extensionSideMenuList.appendChild(extensionSideMenuChordsSection);
-
-extensionSideMenu.appendChild(extensionSideMenuMainTitle);
-extensionSideMenu.appendChild(document.createElement('hr'));
-extensionSideMenu.appendChild(extensionSideMenuList);
-
-
-cifraclubSideMenu.parentNode.insertBefore(extensionSideMenu,cifraclubSideMenu.nextSibling);
-
-/* End of Create Side Menu Section */
-
-
 const displayTargetElement = (elem, shouldDisplay) => {
     if (shouldDisplay) {
         elem.style.display = 'block';
@@ -127,29 +15,14 @@ const displayTargetElement = (elem, shouldDisplay) => {
     
 }
 
-logo_button_ext.addEventListener('change', (ev) =>  {
-    displayTargetElement(logo, logo_button_ext.checked);
+//https://stackoverflow.com/questions/19669786/check-if-element-is-visible-in-dom
+function isTargetElementHidden(elem) {
+    return (elem.offsetParent === null)
+}
 
-})
+const getTargetChord = (id) => document.querySelector(`div[data-id="${id}"]`);
 
-compositor_button_ext.addEventListener('change', (ev) =>  {
-    displayTargetElement(compositor, compositor_button_ext.checked);
-
-})
-
-optimize_title_button_ext.addEventListener('change', (ev) =>  {
-
-    if(optimize_title_button_ext.checked){
-        optimizeTitle();
-    }
-    else{
-        undoOptimizeTitle();
-    }
-
-})
-
-
-const optimizeTitle = () => {
+const simplifyTitle = () => {
     const header = document.querySelector('div.cifra_header');
     const title = header.querySelector('h1');
     title.style.lineHeight = 0;
@@ -158,7 +31,7 @@ const optimizeTitle = () => {
     band.style.marginBottom = 0;
 
     const bandTitleWrapper = document.createElement('div');
-    bandTitleWrapper.setAttribute('id', 'optimize_title_band_container');
+    bandTitleWrapper.setAttribute('id', 'simplify_title_band_container');
     bandTitleWrapper.appendChild(title);
     let separator = document.createElement('h1');
     bandTitleWrapper.appendChild(separator);
@@ -178,27 +51,143 @@ const optimizeTitle = () => {
 
 }
 
-const undoOptimizeTitle = () => {
+const undosimplifyTitle = () => {
     const header = document.querySelector('div.cifra_header');
     header.style.display = 'block';
     header.style.flexDirection = null;
     header.style.marginBottom = '25px';
 
-    const optimize_title_band_container = header.querySelector('#optimize_title_band_container');
-    const title = optimize_title_band_container.querySelector('h1.t1');
+    const simplify_title_band_container = header.querySelector('#simplify_title_band_container');
+    const title = simplify_title_band_container.querySelector('h1.t1');
     title.style.lineHeight = '37px';
-    const band = optimize_title_band_container.querySelector('h2.t2');
+    const band = simplify_title_band_container.querySelector('h2.t2');
     band.style.lineHeight = '30px';
     band.style.marginBottom = '15px';
     header.insertBefore(band, header.firstChild);
     header.insertBefore(title, header.firstChild);
-    header.removeChild(optimize_title_band_container);
+    header.removeChild(simplify_title_band_container);
 
 
 
 }
 
-const getTargetChord = (id) => document.querySelector(`div[data-id="${id}"]`);
+const createExtensionSideMenu = () => {
+
+    let extensionSideMenu = document.querySelector('div[data-id="cifra-extension"]')
+    
+    if(extensionSideMenu){
+    extensionSideMenu.remove();
+    }
+
+    extensionSideMenu = document.createElement('div');
+    extensionSideMenu.setAttribute('id', 'side-menu');
+    extensionSideMenu.dataset.id='cifra-extension';
+    extensionSideMenu.classList.add('g-side');
+    extensionSideMenu.style.marginTop = '370px'
+    extensionSideMenu.style.height = '300px'
+    extensionSideMenu.style.width = '150px'
+    extensionSideMenu.style.overflow = 'auto'
+    
+const extensionSideMenuMainTitle = document.createElement('strong');
+extensionSideMenuMainTitle.appendChild(document.createTextNode('Cifra Extension'));
+
+const extensionSideMenuList = document.createElement('ul');
+
+const extensionSideMenuListHeaderSection = document.createElement('li');
+const extensionSideMenuListHeaderSectionTitle = document.createElement('small');
+extensionSideMenuListHeaderSectionTitle.appendChild(document.createTextNode('Header'));
+extensionSideMenuListHeaderSection.appendChild(extensionSideMenuListHeaderSectionTitle);
+extensionSideMenuListHeaderSection.appendChild(document.createElement('hr'));
+
+const logoButtonExtContainer = document.createElement('span');
+logoButtonExtContainer.classList.add('inp_opt','small');
+const logo_button_ext = document.createElement('input');
+logo_button_ext.setAttribute('type', 'checkbox');
+logo_button_ext.setAttribute('id', 'exib_logo');
+const logo = document.querySelector('img.logo');
+logo_button_ext.checked = !isTargetElementHidden(logo);
+const logo_button_ext_label = document.createElement('label');
+logo_button_ext_label.setAttribute('for','exib_logo');
+logo_button_ext_label.appendChild(document.createTextNode('Show logo'));
+
+logoButtonExtContainer.appendChild(logo_button_ext);
+logoButtonExtContainer.appendChild(logo_button_ext_label);
+
+const simplifyTitleButtonExtContainer = document.createElement('span');
+simplifyTitleButtonExtContainer.classList.add('inp_opt','small');
+const simplify_title_button_ext = document.createElement('input');
+simplify_title_button_ext.setAttribute('type', 'checkbox');
+simplify_title_button_ext.checked = !!document.querySelector('#simplify_title_band_container');
+simplify_title_button_ext.setAttribute('id', 'simplify_title');
+const simplify_title_button_ext_label = document.createElement('label');
+simplify_title_button_ext_label.setAttribute('for','simplify_title');
+simplify_title_button_ext_label.appendChild(document.createTextNode('Simplify Title'));
+
+simplifyTitleButtonExtContainer.appendChild(simplify_title_button_ext);
+simplifyTitleButtonExtContainer.appendChild(simplify_title_button_ext_label);
+
+const compositorButtonExtContainer = document.createElement('span');
+compositorButtonExtContainer.classList.add('inp_opt','small');
+const compositor_button_ext = document.createElement('input');
+compositor_button_ext.setAttribute('type', 'checkbox');
+compositor_button_ext.setAttribute('id', '#exib_compositor');
+const compositor = document.querySelector('small.compositor');
+compositor_button_ext.checked = !isTargetElementHidden(compositor);
+const compositor_button_ext_label = document.createElement('label');
+compositor_button_ext_label.setAttribute('for','#exib_compositor');
+compositor_button_ext_label.appendChild(document.createTextNode('Show Compositor'));
+
+compositorButtonExtContainer.appendChild(compositor_button_ext);
+compositorButtonExtContainer.appendChild(compositor_button_ext_label);
+
+extensionSideMenuListHeaderSection.appendChild(logoButtonExtContainer);
+extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
+extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
+extensionSideMenuListHeaderSection.appendChild(simplifyTitleButtonExtContainer);
+extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
+extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
+extensionSideMenuListHeaderSection.appendChild(compositorButtonExtContainer);
+
+const extensionSideMenuChordsSection = document.createElement('li');
+const extensionSideMenuListChordsSectionTitle = document.createElement('small');
+extensionSideMenuListChordsSectionTitle.appendChild(document.createTextNode('Chords'));
+const extensionSideMenuChordsList = document.createElement('ul');
+extensionSideMenuChordsList.setAttribute('id','chords');
+
+extensionSideMenuChordsSection.appendChild(extensionSideMenuListChordsSectionTitle);
+extensionSideMenuChordsSection.appendChild(document.createElement('hr'));
+extensionSideMenuChordsSection.appendChild(extensionSideMenuChordsList);
+
+extensionSideMenuList.appendChild(extensionSideMenuListHeaderSection);
+extensionSideMenuList.appendChild(extensionSideMenuChordsSection);
+
+extensionSideMenu.appendChild(extensionSideMenuMainTitle);
+extensionSideMenu.appendChild(document.createElement('hr'));
+extensionSideMenu.appendChild(extensionSideMenuList);
+
+logo_button_ext.addEventListener('change', (ev) =>  {
+    displayTargetElement(logo, logo_button_ext.checked);
+
+})
+
+compositor_button_ext.addEventListener('change', (ev) =>  {
+    displayTargetElement(compositor, compositor_button_ext.checked);
+
+})
+
+simplify_title_button_ext.addEventListener('change', (ev) =>  {
+
+    if(simplify_title_button_ext.checked && !document.querySelector('#simplify_title_band_container')){
+        simplifyTitle();
+    }
+    else if(!simplify_title_button_ext.checked && document.querySelector('#simplify_title_band_container')){
+        undosimplifyTitle();
+    }
+
+})
+
+return extensionSideMenu;
+}
 
 const buildChordsSectionOverMenuExtension = () => {
 
@@ -240,7 +229,7 @@ chordsReferenceList.forEach(chord => {
 
     const displayChordInput = document.createElement('input');
     displayChordInput.setAttribute('type', 'checkbox');
-    displayChordInput.setAttribute('checked', targetChord.style.display !== 'none');
+    displayChordInput.checked = !isTargetElementHidden(targetChord);
     displayChordInput.setAttribute('id', `${chord.id}-display-input`);
     displayChordInput.addEventListener('change', (ev) =>  {
         
@@ -428,8 +417,19 @@ chordsReferenceList.forEach(chord => {
 
 }
 
-buildChordsSectionOverMenuExtension();
-displayTargetElement(logo, logo_button_ext.checked);
-displayTargetElement(compositor, compositor_button_ext.checked);
+chrome.runtime.onMessage.addListener((obj, sender, response) => {
     
+    // const {type, data} = obj;
+    // console.log(type);
+    // console.log(data);
+    
+    // const logo = document.querySelector('img.logo');
+    // const compositor = document.querySelector('small.compositor');
+    const cifraclubSideMenu = document.querySelector('#side-menu');
+    const extensionSideMenu = createExtensionSideMenu();
+    
+    cifraclubSideMenu.parentNode.insertBefore(extensionSideMenu,cifraclubSideMenu.nextSibling);
+
+    buildChordsSectionOverMenuExtension();
+        
 })
