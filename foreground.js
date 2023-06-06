@@ -415,6 +415,49 @@ chordsReferenceList.forEach(chord => {
 
     /*End Override Description Section*/
 
+    /* Chord Paper Section */
+    const targetChordPaper = targetChord.closest('div[id*="folha"]').id || 'folha1';
+    
+    const overrideChordPaperContainer = document.createElement('span');
+    overrideChordPaperContainer.classList.add('inp_opt');
+    overrideChordPaperContainer.classList.add('small');
+    overrideChordPaperContainer.style.marginBottom='25px'
+
+    const overrideChordPaperLabel = document.createElement('label');
+    overrideChordPaperLabel.setAttribute('for', `override-paper`);
+    overrideChordPaperLabel.style.paddingLeft='0';
+    overrideChordPaperLabel.appendChild(document.createTextNode('paper:'));
+
+    const overrideChordPaperInput = document.createElement('input');
+    overrideChordPaperInput.setAttribute('id', `override-paper`);
+    overrideChordPaperInput.setAttribute('type', `text`);
+    overrideChordPaperInput.setAttribute('size', `1`);
+    overrideChordPaperInput.setAttribute('display', `block`);
+    overrideChordPaperInput.setAttribute('placeholder',targetChordPaper.replace('folha',''));
+    overrideChordPaperInput.style.margin='4px 0 2px 0';
+    overrideChordPaperInput.style.opacity=1;
+    overrideChordPaperInput.style.border='1px solid black';
+    overrideChordPaperInput.addEventListener('input', (ev) => {
+        
+        const value = ev.target.value?.trim();
+        if(value){
+            const targetPaper = document.querySelector(`div[id="folha${value}"]`);
+            if(targetPaper){
+                const chordsList = targetPaper.querySelector('div.cifra_acordes ul');
+                if(chordsList){
+                    chordsList.appendChild(targetChord.closest('li'));
+                }
+            }
+        }
+        
+    })
+
+    overrideChordPaperContainer.appendChild(overrideChordPaperLabel);
+    overrideChordPaperContainer.appendChild(document.createElement('br'));
+    overrideChordPaperContainer.appendChild(overrideChordPaperInput);
+
+    /* End Chord Paper Section */
+
     /* Binding sections */
     const chordItem = document.createElement('li');    
     chordItem.dataset.id=chord.id;
@@ -427,6 +470,8 @@ chordsReferenceList.forEach(chord => {
         chordItem.appendChild(document.createElement('br'));
         chordItem.appendChild(overrideDescriptionContainer);
     }
+    chordItem.appendChild(document.createElement('br'));
+    chordItem.appendChild(overrideChordPaperContainer);
 
 
     chordsListDiv.appendChild(chordItem);
