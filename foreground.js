@@ -25,6 +25,7 @@ const getTargetChord = (id) => document.querySelector(`div[data-id="${id}"]`);
 const simplifyTitle = () => {
     const header = document.querySelector('div.cifra_header');
     const title = header.querySelector('h1');
+    title.style.fontSize = '26px';
     title.style.lineHeight = 0;
     const band = header.querySelector('h2');
     band.style.lineHeight = 0;
@@ -35,6 +36,7 @@ const simplifyTitle = () => {
     bandTitleWrapper.appendChild(title);
     let separator = document.createElement('h1');
     bandTitleWrapper.appendChild(separator);
+    separator.style.fontSize = '26px';
     separator.style.margin = '0 5px 0 5px';
     separator.appendChild(document.createTextNode('-'));
 
@@ -60,6 +62,7 @@ const undosimplifyTitle = () => {
     const simplify_title_band_container = header.querySelector('#simplify_title_band_container');
     const title = simplify_title_band_container.querySelector('h1.t1');
     title.style.lineHeight = '37px';
+    title.style.fontSize = '30px';
     const band = simplify_title_band_container.querySelector('h2.t2');
     band.style.lineHeight = '30px';
     band.style.marginBottom = '15px';
@@ -187,6 +190,23 @@ simplify_title_button_ext.addEventListener('change', (ev) =>  {
 })
 
 return extensionSideMenu;
+}
+
+const makeContentEditable = () => {
+
+    let contentElems = []
+
+    const h1s = Array.from(document.querySelectorAll('h1:not([contenteditable="true"])'));
+    const h2s = Array.from(document.querySelectorAll('h2:not([contenteditable="true"])'));
+    const compositor = Array.from(document.querySelectorAll('small.compositor:not([contenteditable="true"]'));
+    const lyrics = Array.from(document.querySelectorAll('div.wrap_pre:not([contenteditable="true"]'));
+    
+    contentElems = contentElems.concat(h1s,h2s,compositor,lyrics);
+
+    contentElems.forEach(elem => {
+        elem.setAttribute('contenteditable', 'true');
+    })
+   
 }
 
 const buildChordsSectionOverMenuExtension = () => {
@@ -424,12 +444,12 @@ chrome.runtime.onMessage.addListener((obj, sender, response) => {
     // console.log(data);
     
     // const logo = document.querySelector('img.logo');
-    // const compositor = document.querySelector('small.compositor');
     const cifraclubSideMenu = document.querySelector('#side-menu');
     const extensionSideMenu = createExtensionSideMenu();
     
     cifraclubSideMenu.parentNode.insertBefore(extensionSideMenu,cifraclubSideMenu.nextSibling);
-
+    
+    makeContentEditable();
     buildChordsSectionOverMenuExtension();
         
 })
