@@ -74,6 +74,21 @@ const undosimplifyTitle = () => {
 
 }
 
+
+const addChordsDiagramSlotOnAllPages = () => {
+    const pages = Array.from(document.querySelectorAll('div[id*="folha"]'));
+    pages.forEach(page => {
+        if(!page.querySelector('div.cifra_acordes ul')){
+            const pageInfo = page.querySelector('.paginacao');
+            const chordsDiagramSection = !page.querySelector('div.cifra_acordes') ? document.createElement('div') : page.querySelector('div.cifra_acordes');
+	        chordsDiagramSection.classList = 'cifra_acordes diagram_section_ext'
+            chordsDiagramSection.appendChild(document.createElement('ul'));
+            page.insertBefore(chordsDiagramSection, pageInfo);
+        }
+
+    })
+}
+
 const createExtensionSideMenu = () => {
 
     let extensionSideMenu = document.querySelector('div[data-id="cifra-extension"]')
@@ -143,8 +158,11 @@ compositor_button_ext_label.appendChild(document.createTextNode('Show Compositor
 compositorButtonExtContainer.appendChild(compositor_button_ext);
 compositorButtonExtContainer.appendChild(compositor_button_ext_label);
 
+
+const cifraClubShowChordsDiagramButton = document.querySelector("input[name='chords-footer']");
+
 const minimizeChordsDiagramButtonExtContainer = document.createElement('span');
-minimizeChordsDiagramButtonExtContainer.style.display =  document.querySelector("input[name='chords-footer']").checked !== true ? 'none' : null;
+minimizeChordsDiagramButtonExtContainer.style.display =  cifraClubShowChordsDiagramButton.checked !== true ? 'none' : null;
 minimizeChordsDiagramButtonExtContainer.classList.add('inp_opt','small');
 const minimize_chords_diagram_button_ext = document.createElement('input');
 minimize_chords_diagram_button_ext.setAttribute('type', 'checkbox');
@@ -158,6 +176,36 @@ minimize_chords_diagram_button_ext_label.appendChild(document.createTextNode('Mi
 minimizeChordsDiagramButtonExtContainer.appendChild(minimize_chords_diagram_button_ext);
 minimizeChordsDiagramButtonExtContainer.appendChild(minimize_chords_diagram_button_ext_label);
 
+const extraDiagramChordsSlotOnAllPagesInput = document.createElement('input');
+extraDiagramChordsSlotOnAllPagesInput.setAttribute('type', 'checkbox');
+extraDiagramChordsSlotOnAllPagesInput.checked = false;
+extraDiagramChordsSlotOnAllPagesInput.setAttribute('id', `extra-diagram-chords-slot-on-all-pages-input`);
+extraDiagramChordsSlotOnAllPagesInput.addEventListener('change', (ev) =>  {
+    
+    const shouldAddChordsDiagramSection = ev.target.checked;
+    if(!shouldAddChordsDiagramSection){
+        const diagram_section_ext_list = document.querySelectorAll('div.diagram_section_ext');
+        diagram_section_ext_list.forEach(diagram_section_ext => diagram_section_ext.remove());
+    }
+    else{
+        addChordsDiagramSlotOnAllPages();
+    }
+
+})
+
+const extraDiagramChordsSlotOnAllPagesLabel = document.createElement('label');
+extraDiagramChordsSlotOnAllPagesLabel.setAttribute('for', `extra-diagram-chords-slot-on-all-pages-input`);
+extraDiagramChordsSlotOnAllPagesLabel.appendChild(document.createTextNode(`extra diagram chords slot on all pages`));
+
+
+const extraDiagramChordsSlotOnAllPagesContainer = document.createElement('span');
+extraDiagramChordsSlotOnAllPagesContainer.classList.add('inp_opt');
+extraDiagramChordsSlotOnAllPagesContainer.classList.add('small');
+extraDiagramChordsSlotOnAllPagesContainer.style.marginBottom = '8px';
+extraDiagramChordsSlotOnAllPagesContainer.style.display =  cifraClubShowChordsDiagramButton.checked !== true ? 'none' : null;
+extraDiagramChordsSlotOnAllPagesContainer.appendChild(extraDiagramChordsSlotOnAllPagesInput);
+extraDiagramChordsSlotOnAllPagesContainer.appendChild(extraDiagramChordsSlotOnAllPagesLabel);
+
 extensionSideMenuListHeaderSection.appendChild(logoButtonExtContainer);
 extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
 extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
@@ -168,6 +216,9 @@ extensionSideMenuListHeaderSection.appendChild(compositorButtonExtContainer);
 extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
 extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
 extensionSideMenuListHeaderSection.appendChild(minimizeChordsDiagramButtonExtContainer);
+extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
+extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
+extensionSideMenuListHeaderSection.appendChild(extraDiagramChordsSlotOnAllPagesContainer);
 
 const extensionSideMenuChordsSection = document.createElement('li');
 const extensionSideMenuListChordsSectionTitle = document.createElement('small');
@@ -213,6 +264,14 @@ minimize_chords_diagram_button_ext.addEventListener('change', (ev) => {
     }
     else {
         undominimizeChordsDiagramSpacement();
+    }
+})
+
+cifraClubShowChordsDiagramButton.addEventListener('change', (ev) => {
+    const shouldDisplayDiagramSection = ev.target.checked;
+    if(!shouldDisplayDiagramSection){
+        const diagram_section_ext_list = document.querySelectorAll('div.diagram_section_ext');
+        diagram_section_ext_list.forEach(diagram_section_ext => diagram_section_ext.remove());
     }
 })
 
@@ -528,7 +587,7 @@ chordsReferenceList.forEach(chord => {
     }
     chordItem.appendChild(document.createElement('br'));
     chordItem.appendChild(overrideChordPaperContainer);
-
+  
 
     chordsListDiv.appendChild(chordItem);
     chordsListDiv.appendChild(document.createElement('hr'));
