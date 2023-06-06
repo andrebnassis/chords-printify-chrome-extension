@@ -143,6 +143,21 @@ compositor_button_ext_label.appendChild(document.createTextNode('Show Compositor
 compositorButtonExtContainer.appendChild(compositor_button_ext);
 compositorButtonExtContainer.appendChild(compositor_button_ext_label);
 
+const minimizeChordsDiagramButtonExtContainer = document.createElement('span');
+minimizeChordsDiagramButtonExtContainer.style.display =  document.querySelector("input[name='chords-footer']").checked !== true ? 'none' : null;
+minimizeChordsDiagramButtonExtContainer.classList.add('inp_opt','small');
+const minimize_chords_diagram_button_ext = document.createElement('input');
+minimize_chords_diagram_button_ext.setAttribute('type', 'checkbox');
+minimize_chords_diagram_button_ext.setAttribute('id', '#minimize_chords_diagram');
+minimize_chords_diagram_button_ext.checked = false;
+
+const minimize_chords_diagram_button_ext_label = document.createElement('label');
+minimize_chords_diagram_button_ext_label.setAttribute('for','#minimize_chords_diagram');
+minimize_chords_diagram_button_ext_label.appendChild(document.createTextNode('Minimize Chords Diagram Spacement'));
+
+minimizeChordsDiagramButtonExtContainer.appendChild(minimize_chords_diagram_button_ext);
+minimizeChordsDiagramButtonExtContainer.appendChild(minimize_chords_diagram_button_ext_label);
+
 extensionSideMenuListHeaderSection.appendChild(logoButtonExtContainer);
 extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
 extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
@@ -150,6 +165,9 @@ extensionSideMenuListHeaderSection.appendChild(simplifyTitleButtonExtContainer);
 extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
 extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
 extensionSideMenuListHeaderSection.appendChild(compositorButtonExtContainer);
+extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
+extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
+extensionSideMenuListHeaderSection.appendChild(minimizeChordsDiagramButtonExtContainer);
 
 const extensionSideMenuChordsSection = document.createElement('li');
 const extensionSideMenuListChordsSectionTitle = document.createElement('small');
@@ -189,6 +207,15 @@ simplify_title_button_ext.addEventListener('change', (ev) =>  {
 
 })
 
+minimize_chords_diagram_button_ext.addEventListener('change', (ev) => {
+    if(minimize_chords_diagram_button_ext.checked){
+        minimizeChordSpacement();
+    }
+    else {
+        undominimizeChordSpacement();
+    }
+})
+
 return extensionSideMenu;
 }
 
@@ -207,6 +234,32 @@ const makeContentEditable = () => {
         elem.setAttribute('contenteditable', 'true');
     })
    
+}
+
+const minimizeChordSpacement = () => {
+    const chords_list_arr = Array.from(document.querySelectorAll('.cifra_acordes ul'));
+    chords_list_arr.forEach(chords_list => {
+        chords_list.style.display = 'flex';
+        chords_list.style.flexWrap = 'wrap';
+        chords_list.style.justifyContent = 'space-evenly';
+
+        Array.from(chords_list.querySelectorAll('li')).forEach(item => {
+            item.style.margin = '6px 8px';
+        })
+    })
+}
+
+const undominimizeChordSpacement = () => {
+    const chords_list_arr = Array.from(document.querySelectorAll('.cifra_acordes ul'));
+    chords_list_arr.forEach(chords_list => {
+        chords_list.style.display = 'block';
+        chords_list.style.flexWrap = null;
+        chords_list.style.justifyContent = null;
+
+        Array.from(chords_list.querySelectorAll('li')).forEach(item => {
+            item.style.margin = '18px 24px';
+        })
+    })
 }
 
 const buildChordsSectionOverMenuExtension = () => {
@@ -488,7 +541,6 @@ chrome.runtime.onMessage.addListener((obj, sender, response) => {
     // console.log(type);
     // console.log(data);
     
-    // const logo = document.querySelector('img.logo');
     const cifraclubSideMenu = document.querySelector('#side-menu');
     const extensionSideMenu = createExtensionSideMenu();
     
