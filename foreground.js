@@ -209,10 +209,10 @@ simplify_title_button_ext.addEventListener('change', (ev) =>  {
 
 minimize_chords_diagram_button_ext.addEventListener('change', (ev) => {
     if(minimize_chords_diagram_button_ext.checked){
-        minimizeChordSpacement();
+        minimizeChordsDiagramSpacement();
     }
     else {
-        undominimizeChordSpacement();
+        undominimizeChordsDiagramSpacement();
     }
 })
 
@@ -236,9 +236,11 @@ const makeContentEditable = () => {
    
 }
 
-const minimizeChordSpacement = () => {
+const minimizeChordsDiagramSpacement = () => {
+
     const chords_list_arr = Array.from(document.querySelectorAll('.cifra_acordes ul'));
     chords_list_arr.forEach(chords_list => {
+        chords_list.parentNode.style.padding = 'unset';
         chords_list.style.display = 'flex';
         chords_list.style.flexWrap = 'wrap';
         chords_list.style.justifyContent = 'space-evenly';
@@ -249,9 +251,10 @@ const minimizeChordSpacement = () => {
     })
 }
 
-const undominimizeChordSpacement = () => {
+const undominimizeChordsDiagramSpacement = () => {
     const chords_list_arr = Array.from(document.querySelectorAll('.cifra_acordes ul'));
     chords_list_arr.forEach(chords_list => {
+        chords_list.parentNode.style.padding = null;
         chords_list.style.display = 'block';
         chords_list.style.flexWrap = null;
         chords_list.style.justifyContent = null;
@@ -540,7 +543,7 @@ chrome.runtime.onMessage.addListener((obj, sender, response) => {
     // const {type, data} = obj;
     // console.log(type);
     // console.log(data);
-    
+
     const cifraclubSideMenu = document.querySelector('#side-menu');
     const extensionSideMenu = createExtensionSideMenu();
     
@@ -548,5 +551,4 @@ chrome.runtime.onMessage.addListener((obj, sender, response) => {
     
     makeContentEditable();
     buildChordsSectionOverMenuExtension();
-        
 })
