@@ -142,20 +142,29 @@ simplify_title_button_ext_label.appendChild(document.createTextNode('Simplify Ti
 simplifyTitleButtonExtContainer.appendChild(simplify_title_button_ext);
 simplifyTitleButtonExtContainer.appendChild(simplify_title_button_ext_label);
 
-const compositorButtonExtContainer = document.createElement('span');
-compositorButtonExtContainer.classList.add('inp_opt','small');
-const compositor_button_ext = document.createElement('input');
-compositor_button_ext.setAttribute('type', 'checkbox');
-compositor_button_ext.setAttribute('id', '#exib_compositor');
 const compositor = document.querySelector('small.compositor');
-compositor_button_ext.checked = !isTargetElementHidden(compositor);
-const compositor_button_ext_label = document.createElement('label');
-compositor_button_ext_label.setAttribute('for','#exib_compositor');
-compositor_button_ext_label.appendChild(document.createTextNode('Show Compositor'));
 
-compositorButtonExtContainer.appendChild(compositor_button_ext);
-compositorButtonExtContainer.appendChild(compositor_button_ext_label);
+const compositorButtonExtContainer = compositor ? document.createElement('span') : null;
 
+if(compositorButtonExtContainer)
+{
+    compositorButtonExtContainer.classList.add('inp_opt','small');
+    const compositor_button_ext = document.createElement('input');
+    compositor_button_ext.setAttribute('type', 'checkbox');
+    compositor_button_ext.setAttribute('id', '#exib_compositor');
+    compositor_button_ext.checked = !isTargetElementHidden(compositor);
+    const compositor_button_ext_label = document.createElement('label');
+    compositor_button_ext_label.setAttribute('for','#exib_compositor');
+    compositor_button_ext_label.appendChild(document.createTextNode('Show Compositor'));
+
+    compositor_button_ext.addEventListener('change', (ev) =>  {
+        displayTargetElement(compositor, compositor_button_ext.checked);
+    
+    })
+
+    compositorButtonExtContainer.appendChild(compositor_button_ext);
+    compositorButtonExtContainer.appendChild(compositor_button_ext_label);
+}
 
 const cifraClubShowChordsDiagramButton = document.querySelector("input[name='chords-footer']");
 
@@ -210,9 +219,12 @@ extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
 extensionSideMenuListHeaderSection.appendChild(simplifyTitleButtonExtContainer);
 extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
 extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
-extensionSideMenuListHeaderSection.appendChild(compositorButtonExtContainer);
-extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
-extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
+if(compositorButtonExtContainer)
+{
+    extensionSideMenuListHeaderSection.appendChild(compositorButtonExtContainer);
+    extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
+    extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
+}
 extensionSideMenuListHeaderSection.appendChild(minimizeChordsDiagramButtonExtContainer);
 extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
 extensionSideMenuListHeaderSection.appendChild(document.createElement('br'));
@@ -237,11 +249,6 @@ extensionSideMenu.appendChild(extensionSideMenuList);
 
 logo_button_ext.addEventListener('change', (ev) =>  {
     displayTargetElement(logo, logo_button_ext.checked);
-
-})
-
-compositor_button_ext.addEventListener('change', (ev) =>  {
-    displayTargetElement(compositor, compositor_button_ext.checked);
 
 })
 
